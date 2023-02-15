@@ -4,22 +4,11 @@ import prompts from "../prompts.json";
 export function TypeBox() {
     const [prompt, setPrompt] = useState(getRandomPrompt());
     const [appendedText, setAppendedText] = useState("");
-    const [currentText, setCurrentText] = useState("");
     const [startTime, setStartTime] = useState(undefined);
     const [wordsPerMinute, setWordsPerMinute] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
 
-    const typedText = appendedText + currentText;
-    const faultIndex = typedText.split('').findIndex((c, idx) => prompt[idx] !== c);
-    const wrongText = faultIndex === -1 ? "" : prompt.substring(faultIndex, typedText.length);
-    const rightText = typedText.substring(typedText.length - wrongText.length, 0);
-    const remainingText = prompt.substring(rightText.length + wrongText.length);
-
-
-    if (( (currentText.charAt(currentText.length -1) === " " && !wrongText) || typedText === prompt ) && appendedText !== prompt) {
-        setAppendedText(appendedText + currentText);
-        setCurrentText("");
-    }
+    const [[wrongText, rightText, remainingText], setValues] = useState(["", "", prompt]);
 
     useEffect(() => {
         const setWpm = () => setWordsPerMinute( ( (appendedText || undefined)?.split(" ").length / ( (Date.now() - startTime) / (60 * 1000) ) ) || 0 );
@@ -41,17 +30,35 @@ export function TypeBox() {
 
         <div style={{color: "#e2b714", textAlign: "right", marginBottom: "5px"}}>{isFinished ? "Complete! - " : ""}{wordsPerMinute.toFixed(2)} wpm</div>
         <div style={{whiteSpace: "nowrap", display: "flex", flexDirection: "row"}}>
-            <input style={{width: "100%", height: "27px", fontSize: "1rem", color: "#323437", borderStyle: "solid none solid solid", border: "2px #e2b714", borderRadius: "10px 0 0 10px", outline: "none", padding: "0 10px"}} value={currentText} type="text" autoFocus={true} onChange={e => {
-                if (isFinished) return;
-                setCurrentText(e.target.value);
+            <input style={{width: "100%", height: "27px", fontSize: "1rem", color: "#323437", borderStyle: "solid none solid solid", border: "2px #e2b714", borderRadius: "10px 0 0 10px", outline: "none", padding: "0 10px"}} type="text" autoFocus={true} onChange={e => {
+                if (isFinished) {
+                    e.target.value = "";
+                    return;
+                }
                 if (!startTime) setStartTime(Date.now());
                 if (appendedText + e.target.value === prompt) setIsFinished(true);
+
+                const currentText = e.target.value;
+
+                const typedText = appendedText + currentText;
+                const faultIndex = typedText.split('').findIndex((c, idx) => prompt[idx] !== c);
+                const wrongText = faultIndex === -1 ? "" : prompt.substring(faultIndex, typedText.length);
+                const rightText = typedText.substring(typedText.length - wrongText.length, 0);
+                const remainingText = prompt.substring(rightText.length + wrongText.length);
+
+                if ((currentText.charAt(currentText.length -1) === " " && !wrongText) || typedText === prompt ) {
+                    setAppendedText(appendedText + currentText);
+                    e.target.value = "";
+                }
+                setValues([wrongText, rightText, remainingText]);
             }} />
             <button style={{height: "27px", borderRadius: "0 10px 10px 0", border: "none", backgroundColor: "#e2b714", color: "#323437"}} onClick={() => {
                 setIsFinished(false);
                 setStartTime(undefined);
                 setAppendedText("");
-                setPrompt(getRandomPrompt())
+                const newPrompt = getRandomPrompt();
+                setPrompt(newPrompt);
+                setValues(["", "", newPrompt]);
             }}>{isFinished ? "Again" : "Refresh"}</button>
         </div>
     </div>);
