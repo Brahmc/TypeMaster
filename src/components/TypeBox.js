@@ -41,7 +41,7 @@ export function TypeBox() {
 
         <div style={{color: "#e2b714", textAlign: "right", marginBottom: "5px"}}>{isFinished ? "Complete! - " : ""}{wordsPerMinute.toFixed(2)} wpm</div>
         <div style={{whiteSpace: "nowrap", display: "flex", flexDirection: "row"}}>
-            <input style={{width: "100%", height: "27px", fontSize: "1rem", color: "#323437", borderStyle: "solid none solid solid", border: "2px #e2b714", borderRadius: "10px 0 0 10px", outline: "none", padding: "0 10px"}} value={currentText} type="text" onChange={e => {
+            <input style={{width: "100%", height: "27px", fontSize: "1rem", color: "#323437", borderStyle: "solid none solid solid", border: "2px #e2b714", borderRadius: "10px 0 0 10px", outline: "none", padding: "0 10px"}} value={currentText} type="text" autoFocus={true} onChange={e => {
                 if (isFinished) return;
                 setCurrentText(e.target.value);
                 if (!startTime) setStartTime(Date.now());
@@ -52,7 +52,7 @@ export function TypeBox() {
                 setStartTime(undefined);
                 setAppendedText("");
                 setPrompt(getRandomPrompt())
-            }}>Again</button>
+            }}>{isFinished ? "Again" : "Refresh"}</button>
         </div>
     </div>);
 }
