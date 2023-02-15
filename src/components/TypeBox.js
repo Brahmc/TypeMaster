@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
+import prompts from "../texts.json";
 
 export function TypeBox() {
-    const [text] = useState("A test.");
+    const [prompt, setPrompt] = useState(getPrompt());
     const [appendedText, setAppendedText] = useState("");
     const [currentText, setCurrentText] = useState("");
     const [startTime, setStartTime] = useState(undefined);
@@ -9,13 +10,13 @@ export function TypeBox() {
     const [isFinished, setIsFinished] = useState(false);
 
     const typedText = appendedText + currentText;
-    const faultIndex = typedText.split('').findIndex((c, idx) => text[idx] !== c);
-    const wrongText = faultIndex === -1 ? "" : text.substring(faultIndex, typedText.length);
+    const faultIndex = typedText.split('').findIndex((c, idx) => prompt[idx] !== c);
+    const wrongText = faultIndex === -1 ? "" : prompt.substring(faultIndex, typedText.length);
     const rightText = typedText.substring(typedText.length - wrongText.length, 0);
-    const remainingText = text.substring(rightText.length + wrongText.length);
+    const remainingText = prompt.substring(rightText.length + wrongText.length);
 
 
-    if (( (currentText.charAt(currentText.length -1) === " " && !wrongText) || typedText === text ) && appendedText !== text) {
+    if (( (currentText.charAt(currentText.length -1) === " " && !wrongText) || typedText === prompt ) && appendedText !== prompt) {
         setAppendedText(appendedText + currentText);
         setCurrentText("");
     }
@@ -36,9 +37,20 @@ export function TypeBox() {
         <span>{remainingText}</span>
         <div>{wordsPerMinute.toFixed(2)} WPM</div>
         <input value={currentText} type="text" onChange={e => {
+            if (isFinished) return;
             setCurrentText(e.target.value);
             if (!startTime) setStartTime(Date.now());
-            if (appendedText + e.target.value === text) setIsFinished(true);
+            if (appendedText + e.target.value === prompt) setIsFinished(true);
         }} />
+        <button onClick={() => {
+            setIsFinished(false);
+            setStartTime(undefined);
+            setAppendedText("");
+            setPrompt(getPrompt())
+        }}>Again</button>
     </div>);
+}
+
+function getPrompt() {
+    return prompts[Math.floor(Math.random() * prompts.length)];
 }
