@@ -32,11 +32,14 @@ export function TypeBox() {
     }, [appendedText, isFinished, startTime]);
 
     return (<div style={{maxWidth: 1000, margin: "auto", padding: 50}}>
-        <span style={{color: "#60ff60"}}>{rightText}</span>
-        <span style={{backgroundColor: "rgb(231 78 78 / 67%)"}}>{wrongText}</span>
-        <span style={{boxShadow: "-1px 0 0 grey"}}>{remainingText.substring(0, 1)}</span>
-        <span>{remainingText.substring(1)}</span>
-        <div style={{color: "#e2b714"}}>{wordsPerMinute.toFixed(2)} WPM</div>
+        <div style={{marginBottom: "30px"}}>
+            <span style={{color: "#60ff60"}}>{rightText}</span>
+            <span style={{backgroundColor: "rgb(231 78 78 / 67%)"}}>{wrongText}</span>
+            <span style={{boxShadow: "-1px 0 0 grey"}}>{remainingText.substring(0, 1)}</span>
+            <span>{remainingText.substring(1)}</span>
+        </div>
+
+        <div style={{color: "#e2b714"}}>{isFinished ? "Complete! - " : ""}{wordsPerMinute.toFixed(2)} WPM</div>
         <input value={currentText} type="text" onChange={e => {
             if (isFinished) return;
             setCurrentText(e.target.value);
