@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import prompts from "../texts.json";
+import prompts from "../prompts.json";
 
 export function TypeBox() {
     const [prompt, setPrompt] = useState(getPrompt());
