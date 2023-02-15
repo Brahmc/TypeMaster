@@ -33,25 +33,27 @@ export function TypeBox() {
 
     return (<div style={{maxWidth: 1000, margin: "auto", padding: 50}}>
         <div style={{marginBottom: "30px"}}>
-            <span style={{color: "#60ff60"}}>{rightText}</span>
-            <span style={{backgroundColor: "rgb(231 78 78 / 67%)"}}>{wrongText}</span>
-            <span style={{boxShadow: "-1px 0 0 grey"}}>{remainingText.substring(0, 1)}</span>
-            <span>{remainingText.substring(1)}</span>
+            <span >{rightText}</span>
+            <span style={{backgroundColor: "rgb(249 66 66 / 48%)", color: "grey"}}>{wrongText}</span>
+            <span style={{boxShadow: "-1px 0 0 grey", color: "grey"}}>{remainingText.substring(0, 1)}</span>
+            <span style={{color: "grey"}}>{remainingText.substring(1)}</span>
         </div>
 
-        <div style={{color: "#e2b714"}}>{isFinished ? "Complete! - " : ""}{wordsPerMinute.toFixed(2)} WPM</div>
-        <input value={currentText} type="text" onChange={e => {
-            if (isFinished) return;
-            setCurrentText(e.target.value);
-            if (!startTime) setStartTime(Date.now());
-            if (appendedText + e.target.value === prompt) setIsFinished(true);
-        }} />
-        <button onClick={() => {
-            setIsFinished(false);
-            setStartTime(undefined);
-            setAppendedText("");
-            setPrompt(getRandomPrompt())
-        }}>Again</button>
+        <div style={{color: "#e2b714", textAlign: "right", marginBottom: "5px"}}>{isFinished ? "Complete! - " : ""}{wordsPerMinute.toFixed(2)} wpm</div>
+        <div style={{whiteSpace: "nowrap", display: "flex", flexDirection: "row"}}>
+            <input style={{width: "100%", height: "27px", fontSize: "1rem", color: "#323437", borderStyle: "solid none solid solid", border: "2px #e2b714", borderRadius: "10px 0 0 10px", outline: "none", padding: "0 10px"}} value={currentText} type="text" onChange={e => {
+                if (isFinished) return;
+                setCurrentText(e.target.value);
+                if (!startTime) setStartTime(Date.now());
+                if (appendedText + e.target.value === prompt) setIsFinished(true);
+            }} />
+            <button style={{height: "27px", borderRadius: "0 10px 10px 0", border: "none", backgroundColor: "#e2b714", color: "#323437"}} onClick={() => {
+                setIsFinished(false);
+                setStartTime(undefined);
+                setAppendedText("");
+                setPrompt(getRandomPrompt())
+            }}>Again</button>
+        </div>
     </div>);
 }
 
