@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import prompts from "../prompts.json";
 
 export function TypeBox() {
-    const [prompt, setPrompt] = useState(getPrompt());
+    const [prompt, setPrompt] = useState(getRandomPrompt());
     const [appendedText, setAppendedText] = useState("");
     const [currentText, setCurrentText] = useState("");
     const [startTime, setStartTime] = useState(undefined);
@@ -50,11 +50,11 @@ export function TypeBox() {
             setIsFinished(false);
             setStartTime(undefined);
             setAppendedText("");
-            setPrompt(getPrompt())
+            setPrompt(getRandomPrompt())
         }}>Again</button>
     </div>);
 }
 
-function getPrompt() {
+function getRandomPrompt() {
     return prompts[Math.floor(Math.random() * prompts.length)];
 }
