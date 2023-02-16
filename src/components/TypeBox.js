@@ -32,11 +32,11 @@ export function TypeBox() {
     },[isTyping]);
 
     return (<div style={{maxWidth: 1000, margin: "auto", padding: 50}}>
-        <div style={{marginBottom: "30px"}}>
-            <span >{rightText}</span>
-            <span style={{backgroundColor: "rgb(249 66 66 / 48%)", color: "grey"}}>{wrongText}</span>
-            <CurrentLetter isTyping={isTyping} style={{ color: "grey"}}>{remainingText.substring(0, 1)}</CurrentLetter>
-            <span style={{color: "grey"}}>{remainingText.substring(1)}</span>
+        <div style={{color: "grey", marginBottom: "30px"}}>
+            <span style={{color: "white"}} >{rightText}</span>
+            <span style={{backgroundColor: "#f942427a"}}>{wrongText}</span>
+            <CurrentLetter isTyping={isTyping}>{remainingText.substring(0, 1)}</CurrentLetter>
+            <span>{remainingText.substring(1)}</span>
         </div>
 
         <div style={{color: "#e2b714", textAlign: "right", marginBottom: "5px"}}>{isFinished ? "Complete! - " : ""}{isNaN(wordsPerMinute) ? "-" : wordsPerMinute.toFixed(2)} wpm</div>
