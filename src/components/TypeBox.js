@@ -31,6 +31,38 @@ export function TypeBox() {
         }, 500);
     },[isTyping]);
 
+    function handleCharInput(e) {
+        if (isFinished) return;
+        setIsTyping(true);
+        if (!startTime) setStartTime(Date.now());
+        if (appendedText + e.target.value === prompt) setIsFinished(true);
+
+        const currentText = e.target.value;
+
+        const typedText = appendedText + currentText;
+        const faultIndex = typedText.split('').findIndex((c, idx) => prompt[idx] !== c);
+        const wrongText = faultIndex === -1 ? "" : prompt.substring(faultIndex, typedText.length);
+        const rightText = typedText.substring(typedText.length - wrongText.length, 0);
+        const remainingText = prompt.substring(rightText.length + wrongText.length);
+
+        if ((currentText.charAt(currentText.length -1) === " " && !wrongText) || typedText === prompt ) {
+            setAppendedText(typedText);
+            e.target.value = "";
+        }
+        setValues([wrongText, rightText, remainingText]);
+    }
+
+    function resetCurrent() {
+        setIsFinished(false);
+        setStartTime(undefined);
+        setAppendedText("");
+        const newPrompt = getRandomPrompt();
+        setPrompt(newPrompt);
+        setValues(["", "", newPrompt]);
+        setInputFocus();
+        inputRef.current.value = "";
+    }
+
     return (<div style={{maxWidth: 1000, margin: "auto", padding: 50}}>
         <div style={{color: "grey", marginBottom: "30px"}}>
             <span style={{color: "white"}} >{rightText}</span>
@@ -39,41 +71,12 @@ export function TypeBox() {
             <span>{remainingText.substring(1)}</span>
         </div>
 
-        <div style={{color: "#e2b714", textAlign: "right", marginBottom: "5px"}}>{isFinished ? "Complete! - " : ""}{isNaN(wordsPerMinute) ? "-" : wordsPerMinute.toFixed(2)} wpm</div>
+        <div style={{color: "#e2b714", textAlign: "right", marginBottom: "5px"}}>
+            {isFinished ? "Complete! - " : ""}{isNaN(wordsPerMinute) ? "-" : wordsPerMinute.toFixed(2)} wpm
+        </div>
         <InputWrapper>
-            <input ref={inputRef} type="text" autoFocus={true} readOnly={isFinished} onChange={e => {
-                if (isFinished) {
-                    e.target.value = "";
-                    return;
-                }
-                setIsTyping(true);
-                if (!startTime) setStartTime(Date.now());
-                if (appendedText + e.target.value === prompt) setIsFinished(true);
-
-                const currentText = e.target.value;
-
-                const typedText = appendedText + currentText;
-                const faultIndex = typedText.split('').findIndex((c, idx) => prompt[idx] !== c);
-                const wrongText = faultIndex === -1 ? "" : prompt.substring(faultIndex, typedText.length);
-                const rightText = typedText.substring(typedText.length - wrongText.length, 0);
-                const remainingText = prompt.substring(rightText.length + wrongText.length);
-
-                if ((currentText.charAt(currentText.length -1) === " " && !wrongText) || typedText === prompt ) {
-                    setAppendedText(typedText);
-                    e.target.value = "";
-                }
-                setValues([wrongText, rightText, remainingText]);
-            }} />
-            <button onClick={() => {
-                setIsFinished(false);
-                setStartTime(undefined);
-                setAppendedText("");
-                const newPrompt = getRandomPrompt();
-                setPrompt(newPrompt);
-                setValues(["", "", newPrompt]);
-                setInputFocus();
-                inputRef.current.value = "";
-            }}>{isFinished ? "Again" : "Refresh"}</button>
+            <input ref={inputRef} type="text" autoFocus={true} readOnly={isFinished} onChange={handleCharInput} />
+            <button onClick={resetCurrent}>{isFinished ? "Again" : "Refresh"}</button>
         </InputWrapper>
     </div>);
 }
