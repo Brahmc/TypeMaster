@@ -34,7 +34,7 @@ export const InputWrapper = styled.div`
 `;
 
 export const CurrentLetter = styled.span`
-  animation: ${props => props.isTyping ? null : 'Cursor-Blink 1s infinite linear'};
+  animation: ${props => props.isTyping ? null : 'Cursor-Blink 1.06s infinite linear'};
   box-shadow: -2px 0 0 #e2b714;
 
   @keyframes Cursor-Blink {

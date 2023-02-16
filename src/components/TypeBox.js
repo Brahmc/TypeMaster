@@ -28,7 +28,7 @@ export function TypeBox() {
         if (!isTyping) return;
         setTimeout(() => {
             setIsTyping(false);
-        }, 500);
+        }, 400);
     },[isTyping]);
 
     function handleCharInput(e) {
