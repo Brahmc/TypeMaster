@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import prompts from "../prompts.json";
 import useFocus from "../hooks/useFocus";
-import {InputWrapper} from "../styles/TypeBoxStyles";
+import {CurrentLetter, InputWrapper} from "../styles/TypeBoxStyles";
 
 export function TypeBox() {
     const [prompt, setPrompt] = useState(getRandomPrompt());
@@ -10,6 +10,7 @@ export function TypeBox() {
     const [wordsPerMinute, setWordsPerMinute] = useState(NaN);
     const [isFinished, setIsFinished] = useState(false);
     const [inputRef, setInputFocus] = useFocus();
+    const [isTyping, setIsTyping] = useState(false);
 
     const [[wrongText, rightText, remainingText], setValues] = useState(["", "", prompt]);
 
@@ -22,12 +23,19 @@ export function TypeBox() {
         }, 600);
         return () => clearInterval(interval);
     }, [appendedText, isFinished, startTime]);
+    
+    useEffect(() => {
+        if (!isTyping) return;
+        setTimeout(() => {
+            setIsTyping(false);
+        }, 500);
+    },[isTyping]);
 
     return (<div style={{maxWidth: 1000, margin: "auto", padding: 50}}>
         <div style={{marginBottom: "30px"}}>
             <span >{rightText}</span>
             <span style={{backgroundColor: "rgb(249 66 66 / 48%)", color: "grey"}}>{wrongText}</span>
-            <span style={{boxShadow: "-1px 0 0 grey", color: "grey"}}>{remainingText.substring(0, 1)}</span>
+            <CurrentLetter isTyping={isTyping} style={{ color: "grey"}}>{remainingText.substring(0, 1)}</CurrentLetter>
             <span style={{color: "grey"}}>{remainingText.substring(1)}</span>
         </div>
 
@@ -38,6 +46,7 @@ export function TypeBox() {
                     e.target.value = "";
                     return;
                 }
+                setIsTyping(true);
                 if (!startTime) setStartTime(Date.now());
                 if (appendedText + e.target.value === prompt) setIsFinished(true);
 

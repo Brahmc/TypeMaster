@@ -25,3 +25,15 @@ export const InputWrapper = styled.div`
     color: #323437;
   }
 `;
+
+export const CurrentLetter = styled.span`
+  animation: ${props => props.isTyping ? null : 'Cursor-Blink 1s infinite linear'};
+  box-shadow: -2px 0 0 #e2b714;
+
+  @keyframes Cursor-Blink {
+      0% { box-shadow: -2px 0 0 #e2b714 }
+      49% { box-shadow: -2px 0 0 #e2b714 }
+      50% { box-shadow: none }
+      100% { box-shadow: none }
+  }
+`;
