@@ -25,9 +25,8 @@ export function TypeBox() {
         if (isFinished) return;
         setIsTyping(true);
         if (!startTime) setStartTime(Date.now());
-        if (appendedTextRef.current + e.target.value === prompt) setIsFinished(true);
-
         const currentText = e.target.value;
+        if (appendedTextRef.current + currentText === prompt) setIsFinished(true);
 
         const typedText = appendedTextRef.current + currentText;
         const faultIndex = typedText.split('').findIndex((c, idx) => prompt[idx] !== c);
