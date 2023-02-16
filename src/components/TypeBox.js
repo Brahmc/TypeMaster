@@ -75,8 +75,8 @@ export function TypeBox() {
         <WordsPerMinuteDisplay>
             {isFinished ? "Complete! - " : ""}{isNaN(wordsPerMinute) ? "-" : wordsPerMinute.toFixed(2)} wpm
         </WordsPerMinuteDisplay>
-        <InputWrapper>
-            <input ref={inputRef} type="text" autoFocus={true} readOnly={isFinished} onChange={handleCharInput} />
+        <InputWrapper faultPresent={wrongText}>
+            <input ref={inputRef} autoFocus={true} readOnly={isFinished} onChange={handleCharInput} />
             <button onClick={resetCurrent}>{isFinished ? "Again" : "Refresh"}</button>
         </InputWrapper>
     </TypeBoxWrapper>);

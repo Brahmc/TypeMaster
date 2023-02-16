@@ -21,6 +21,7 @@ export const InputWrapper = styled.div`
     border-radius: 10px 0 0 10px; 
     outline: none;
     padding: 0 10px;
+    background-color: ${props => props.faultPresent ? "#ffc7c7" : null};
   }
   
   button {
