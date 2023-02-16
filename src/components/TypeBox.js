@@ -63,7 +63,7 @@ export function TypeBox() {
     return (
     <TypeBoxWrapper>
         <TextPreview>
-            <span style={{color: "white"}} >{rightText}</span>
+            <span style={{color: "#d7d6cd"}} >{rightText}</span>
             <span style={{backgroundColor: "#f942427a"}}>{wrongText}</span>
             <CurrentLetter isTyping={isTyping}>{remainingText.substring(0, 1)}</CurrentLetter>
             <span>{remainingText.substring(1)}</span>
