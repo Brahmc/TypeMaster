@@ -45,7 +45,7 @@ export const CurrentLetter = styled.span`
   }
 `;
 
-export const TextPreview = styled.div`
+export const TextPreviewWrapper = styled.div`
   color: grey;
   margin-bottom: 30px;
   user-select: none;

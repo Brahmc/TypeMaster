@@ -1,8 +1,9 @@
 import {useEffect, useRef, useState} from "react";
 import prompts from "../prompts.json";
 import useFocus from "../hooks/useFocus";
-import {CurrentLetter, InputWrapper, TextPreview, TypeBoxWrapper} from "../styles/TypeBoxStyles";
+import {InputWrapper, TypeBoxWrapper} from "../styles/TypeBoxStyles";
 import {WordsPerMinuteDisplay} from "./WordsPerMinuteDisplay";
+import {TextPreview} from "./TextPreview";
 
 export function TypeBox() {
     const [prompt, setPrompt] = useState(getRandomPrompt());
@@ -12,7 +13,8 @@ export function TypeBox() {
     const [inputRef, setInputFocus] = useFocus();
     const [isTyping, setIsTyping] = useState(false);
 
-    const [[wrongText, rightText, remainingText], setValues] = useState(["", "", prompt]);
+    const [typedText, setTypedText] = useState("");
+    const [faultPresent, setFaultPresent] = useState(false);
 
     useEffect(() => {
         if (!isTyping) return;
@@ -26,19 +28,18 @@ export function TypeBox() {
         setIsTyping(true);
         if (!startTime) setStartTime(Date.now());
         const currentText = e.target.value;
-        if (appendedTextRef.current + currentText === prompt) setIsFinished(true);
 
         const typedText = appendedTextRef.current + currentText;
-        const faultIndex = typedText.split('').findIndex((c, idx) => prompt[idx] !== c);
-        const wrongText = faultIndex === -1 ? "" : prompt.substring(faultIndex, typedText.length);
-        const rightText = prompt.substring(0, Math.min(typedText.length, prompt.length) - wrongText.length);
-        const remainingText = prompt.substring(rightText.length + wrongText.length);
+        const faultPresent = !prompt.startsWith(typedText);
+        const lastChar = typedText === prompt;
 
-        if ((currentText.charAt(currentText.length -1) === " " && !wrongText) || typedText === prompt ) {
+        if ((currentText.charAt(currentText.length -1) === " " && !faultPresent) || lastChar ) {
             appendedTextRef.current = typedText;
             e.target.value = "";
         }
-        setValues([wrongText, rightText, remainingText]);
+        setIsFinished(lastChar);
+        setFaultPresent(faultPresent);
+        setTypedText(typedText);
     }
 
     function resetCurrent() {
@@ -47,22 +48,17 @@ export function TypeBox() {
         appendedTextRef.current = "";
         const newPrompt = getRandomPrompt();
         setPrompt(newPrompt);
-        setValues(["", "", newPrompt]);
+        setTypedText("");
         setInputFocus();
         inputRef.current.value = "";
     }
 
     return (
     <TypeBoxWrapper>
-        <TextPreview>
-            <span style={{color: "#d7d6cd"}} >{rightText}</span>
-            <span style={{backgroundColor: "#f942427a"}}>{wrongText}</span>
-            <CurrentLetter isTyping={isTyping}>{remainingText.substring(0, 1)}</CurrentLetter>
-            <span>{remainingText.substring(1)}</span>
-        </TextPreview>
+        <TextPreview prompt={prompt} typedText={typedText} isTyping={isTyping}  />
 
         <WordsPerMinuteDisplay startTime={startTime} isFinished={isFinished} appendedTextRef={appendedTextRef} />
-        <InputWrapper faultPresent={wrongText}>
+        <InputWrapper faultPresent={faultPresent}>
             <input ref={inputRef} autoFocus={true} readOnly={isFinished} onChange={handleCharInput} />
             <button onClick={resetCurrent}>{isFinished ? "Again" : "Refresh"}</button>
         </InputWrapper>
