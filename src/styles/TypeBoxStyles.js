@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+export const TypeBoxWrapper = styled.div`
+  max-width: 1000px;
+  margin: auto;
+  padding: 50px;
+`;
+
 export const InputWrapper = styled.div`
   white-space: nowrap;
   display: flex;
@@ -36,4 +42,16 @@ export const CurrentLetter = styled.span`
       50% { box-shadow: none }
       100% { box-shadow: none }
   }
+`;
+
+export const TextPreview = styled.div`
+  color: grey;
+  margin-bottom: 30px;
+  user-select: none;
+`;
+
+export const WordsPerMinuteDisplay = styled.div`
+  color: #e2b714;
+  text-align: right;
+  margin-bottom: 5px;
 `;
