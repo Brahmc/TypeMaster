@@ -51,7 +51,7 @@ export const TextPreview = styled.div`
   user-select: none;
 `;
 
-export const WordsPerMinuteDisplay = styled.div`
+export const WordsPerMinuteDisplayWrapper = styled.div`
   color: #e2b714;
   text-align: right;
   margin-bottom: 5px;

@@ -1,25 +1,18 @@
 import {useEffect, useRef, useState} from "react";
 import prompts from "../prompts.json";
 import useFocus from "../hooks/useFocus";
-import {CurrentLetter, InputWrapper, TextPreview, TypeBoxWrapper, WordsPerMinuteDisplay} from "../styles/TypeBoxStyles";
+import {CurrentLetter, InputWrapper, TextPreview, TypeBoxWrapper} from "../styles/TypeBoxStyles";
+import {WordsPerMinuteDisplay} from "./WordsPerMinuteDisplay";
 
 export function TypeBox() {
     const [prompt, setPrompt] = useState(getRandomPrompt());
     const appendedTextRef = useRef("");
     const [startTime, setStartTime] = useState(undefined);
-    const [wordsPerMinute, setWordsPerMinute] = useState(NaN);
     const [isFinished, setIsFinished] = useState(false);
     const [inputRef, setInputFocus] = useFocus();
     const [isTyping, setIsTyping] = useState(false);
 
     const [[wrongText, rightText, remainingText], setValues] = useState(["", "", prompt]);
-
-    useEffect(() => {
-        if (!startTime || isFinished) return;
-        const setWpm = () => setWordsPerMinute( ( (appendedTextRef.current ? appendedTextRef.current.split(" ").length : 0) / ( (Date.now() - startTime) / (60 * 1000) ) ));
-        const interval = setInterval(setWpm, 700);
-        return () => {clearInterval(interval); setWpm();};
-    }, [appendedTextRef, startTime, isFinished]);
 
     useEffect(() => {
         if (!isTyping) return;
@@ -69,9 +62,7 @@ export function TypeBox() {
             <span>{remainingText.substring(1)}</span>
         </TextPreview>
 
-        <WordsPerMinuteDisplay>
-            {isFinished ? "Complete! - " : ""}{isNaN(wordsPerMinute) ? "-" : wordsPerMinute.toFixed(2)} wpm
-        </WordsPerMinuteDisplay>
+        <WordsPerMinuteDisplay startTime={startTime} isFinished={isFinished} appendedTextRef={appendedTextRef} />
         <InputWrapper faultPresent={wrongText}>
             <input ref={inputRef} autoFocus={true} readOnly={isFinished} onChange={handleCharInput} />
             <button onClick={resetCurrent}>{isFinished ? "Again" : "Refresh"}</button>
