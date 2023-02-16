@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import prompts from "../prompts.json";
 import useFocus from "../hooks/useFocus";
+import {InputWrapper} from "../styles/TypeBoxStyles";
 
 export function TypeBox() {
     const [prompt, setPrompt] = useState(getRandomPrompt());
@@ -31,8 +32,8 @@ export function TypeBox() {
         </div>
 
         <div style={{color: "#e2b714", textAlign: "right", marginBottom: "5px"}}>{isFinished ? "Complete! - " : ""}{isNaN(wordsPerMinute) ? "-" : wordsPerMinute.toFixed(2)} wpm</div>
-        <div style={{whiteSpace: "nowrap", display: "flex", flexDirection: "row"}}>
-            <input ref={inputRef} style={{width: "100%", height: "27px", fontSize: "1rem", color: "#323437", borderStyle: "solid none solid solid", border: "2px #e2b714", borderRadius: "10px 0 0 10px", outline: "none", padding: "0 10px"}} type="text" autoFocus={true} readOnly={isFinished} onChange={e => {
+        <InputWrapper>
+            <input ref={inputRef} type="text" autoFocus={true} readOnly={isFinished} onChange={e => {
                 if (isFinished) {
                     e.target.value = "";
                     return;
@@ -54,7 +55,7 @@ export function TypeBox() {
                 }
                 setValues([wrongText, rightText, remainingText]);
             }} />
-            <button style={{height: "27px", borderRadius: "0 10px 10px 0", border: "none", backgroundColor: "#e2b714", color: "#323437"}} onClick={() => {
+            <button onClick={() => {
                 setIsFinished(false);
                 setStartTime(undefined);
                 setAppendedText("");
@@ -64,7 +65,7 @@ export function TypeBox() {
                 setInputFocus();
                 inputRef.current.value = "";
             }}>{isFinished ? "Again" : "Refresh"}</button>
-        </div>
+        </InputWrapper>
     </div>);
 }
 
