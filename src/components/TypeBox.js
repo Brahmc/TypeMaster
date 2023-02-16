@@ -42,7 +42,7 @@ export function TypeBox() {
         const typedText = appendedText + currentText;
         const faultIndex = typedText.split('').findIndex((c, idx) => prompt[idx] !== c);
         const wrongText = faultIndex === -1 ? "" : prompt.substring(faultIndex, typedText.length);
-        const rightText = typedText.substring(typedText.length - wrongText.length, 0);
+        const rightText = prompt.substring(0, Math.min(typedText.length, prompt.length) - wrongText.length);
         const remainingText = prompt.substring(rightText.length + wrongText.length);
 
         if ((currentText.charAt(currentText.length -1) === " " && !wrongText) || typedText === prompt ) {
